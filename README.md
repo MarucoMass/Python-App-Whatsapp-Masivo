@@ -2,7 +2,7 @@
 
 # 🟢 INSTRUCCIONES DE INSTALACIÓN
 1. Descargar el repo o clonarlo.
-2. Descargar una versión embebida de python y meterlo en la carpeta del proyecto. Yo usé python 3.11.4.
+2. Si ya tienes python instalado ir directamente al paso 4. De lo contrario debes descargar python o una versión embebida de python y meterlo en la carpeta del proyecto. Yo usé python 3.11.4.
 3. Instalar pip en la carpeta de python embebido.
 4. Instalar las dependencias que figuran en requirements.txt.
 
