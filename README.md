@@ -4,14 +4,15 @@
 1. Descargar el repo o clonarlo.
 2. Si ya tienes python instalado ir directamente al paso 4. De lo contrario debes descargar python o una versión embebida de python y meterlo en la carpeta del proyecto. Yo usé python 3.11.4.
 3. Instalar pip en la carpeta de python embebido.
-4. Instalar las dependencias que figuran en requirements.txt.
+4. Instalar las dependencias que figuran en requirements.txt de manera o en un entorno virtual con venv
+5. Si ya tenia python instalado en su sistema debe modificar archivo `masivo.bat` para que corra este comando `streamlit run app.py`. Si va a usar una carpeta con python embebido debe mover el `app.py` a esa carpeta y en el `masvio.bat` deje el comando `.\python\python.exe -m streamlit run .\python\app.py`.
 
 # 🟢 INSTRUCCIONES DE USO 
 
 ## 📁 1. ABRIR LA APLICACIÓN
 
-1. Abrí la carpeta llamada: `whatsapp_masivo`  
-2. Hacé doble clic sobre el archivo: `masivo.bat`  
+1. Abrí la carpeta llamada: `whatsapp_masivo`.
+2. Hacé doble clic sobre el archivo: `masivo.bat`.
 3. Se abrirá una ventana negra (consola) y automáticamente se abrirá la app en tu navegador.  
 4. Si no se abre sola, abrí el navegador y pegá esto:  
    👉 [http://localhost:8501](http://localhost:8501)
