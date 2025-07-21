@@ -5,7 +5,7 @@
 2. Si ya tienes python instalado ir directamente al paso 4 o descargue python. SI no quiere descargarlo puede bajar una versión portable embebida de python y meterla en la carpeta del proyecto. Si hace eso debe mover el `app.py` a esa carpeta.
 3. Instalar pip en la carpeta de python embebido.
 4. Instalar las dependencias que figuran en requirements.txt de manera global o en un entorno virtual con venv. Si usó python embebido debe instalar las dependencias en esa carpeta
-5. Si ya tenia python instalado en su sistema debe modificar archivo `masivo.bat` para que corra este comando `streamlit run app.py`. Si va a usar una carpeta con python embebido debe mover el `app.py` a esa carpeta y en el `masvio.bat` deje el comando `.\python\python.exe -m streamlit run .\python\app.py`.
+5. Si ya tenia python instalado en su sistema debe modificar archivo `masivo.bat` para que corra este comando `streamlit run app.py`. Si va a usar una carpeta con python embebido debe mover el `app.py` a esa carpeta y en el `masivo.bat` deje el comando `.\python\python.exe -m streamlit run .\python\app.py`.
 
 # 🟢 INSTRUCCIONES DE USO 
 
