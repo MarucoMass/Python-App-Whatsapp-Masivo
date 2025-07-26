@@ -27,7 +27,7 @@ def is_profile_in_use(profile_path):
     return False
 
 def iniciar_driver():
-    profile_path = os.path.abspath("selenium_profile")
+    profile_path = os.path.abspath("perfil_whatsapp")
     if is_profile_in_use(profile_path):
         st.error("⚠️ Cerrá el Chrome que está usando la sesión guardada antes de continuar.")
         st.stop()
@@ -147,4 +147,3 @@ if st.session_state.estado == 'enviando':
         file_name=nombre_excel,
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
