@@ -10,43 +10,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from funciones.whatsapp_utils import enviar_mensajes
+from funciones.whatsapp_utils import enviar_mensajes, normalizar_numero, variar_inicio_mensajes, iniciar_driver
 
-# ------------- Funciones -------------
-
-def variar_inicio_mensajes(nombre: str) -> str:
-    opciones = [
-        f"Hola {nombre}, cómo estás?",
-        f"Hola! Cómo estás {nombre}?, gusto en saludarte.",
-        f"Hola {nombre}, ¿qué tal?",
-        f"Hola {nombre}!, ¿todo bien?",
-    ]
-    return random.choice(opciones)
-
-def iniciar_driver():
-    profile_path = os.path.abspath("perfil_whatsapp")
-    options = webdriver.ChromeOptions()
-    options.add_argument(f'--user-data-dir={profile_path}')
-    options.add_argument("--profile-directory=Default")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.get("https://web.whatsapp.com")
-    return driver
-
-def normalizar_numero(num: str, CODIGO_PAIS="54") -> str:
-    if num.startswith(CODIGO_PAIS):
-        return f"+{num}"
-    elif num.startswith("0" + CODIGO_PAIS):
-        return f"+{num[1:]}"
-    elif num.startswith("0"):
-        return f"+{CODIGO_PAIS}{num[1:]}"
-    elif num.startswith("15") or len(num) <= 10:
-        return f"+{CODIGO_PAIS}{num}"
-    else:
-        return f"+{CODIGO_PAIS}{num}"
 
 # ------------- Streamlit -------------
 
@@ -83,10 +48,12 @@ if archivo:
         )
         
         mensaje_base = st.text_area(
-            "✉️ Escribí el cuerpo del mensaje. El `Hola {nombre}, cómo éstas? (por ejemplo),` se agrega automáticamente.",
+            "✉️ Escribí el cuerpo del mensaje. El `Hola {nombre}, cómo éstas? (por ejemplo)` se agrega automáticamente.",
             height=200,
             placeholder="Te escribimos desde la fundación para recordarte..."
         )
+
+        # pdf = st.file_uploader("Adjunta un pdf si lo necesitas", type=["pdf"])
 
         if st.button("👀 Mostrar vista previa"):
             if not mensaje_base.strip():
@@ -132,48 +99,21 @@ if archivo:
                     nombre = str(row["Nombre"])
                     numero = str(row["Numero"])
                     
-                    estado = enviar_mensajes(driver, nombre, numero, mensaje_cuerpo)
+                    estado = enviar_mensajes(driver, nombre, numero, mensaje_cuerpo, index, contactos)
                     
                     historial.append({
                         "Nombre": nombre,
                         "Numero": numero,
                         "Fecha-Último-Envio": datetime.now().strftime("%d/%m/%Y %H:%M"),
-                        "Estado": estado,
-                        "Respondió": "Revisar",
-                        "Fecha-Última-Respuesta": "---"
+                        "Mensaje-Enviado": mensaje_cuerpo,
+                        "Estado":"✅ Enviado" if estado else "❌ No enviado",
+                        "Status-Respuesta":"Para revisar" if estado  else "No enviado",
+                        "Fecha-Última-Respuesta": "---",
+                        # "Reenviado": "No",
+                        "Notas": ""
                     })
 
-                    # mensaje = variar_inicio_mensajes(nombre) + " " + mensaje_cuerpo
-                    # mensaje_url = urllib.parse.quote(mensaje)
-                    # url = f"https://web.whatsapp.com/send?phone={numero}&text={mensaje_url}"
-
-                    # ahora = datetime.now().strftime("%d/%m/%Y %H:%M")
-                    # st.write(f"📨 Enviando a {nombre} ({numero})...")
-                    # driver.get(url)
-                    # time.sleep(10)
-
-                    # try:
-                    #     boton = driver.find_element(By.XPATH, '//button[@aria-label="Enviar"]')
-                    #     boton.click()
-                    #     estado = "✅ Enviado"
-                    #     st.success(f"{nombre}: Mensaje enviado.")
-                    # except Exception as e:
-                    #     print(e)
-                    #     estado = f"❌ Error: {e}"
-                    #     st.error(f"{nombre}: Error al enviar.")
-
-                    # historial.append({
-                    #     "Nombre": nombre,
-                    #     "Numero": numero,
-                    #     "Fecha": ahora,
-                    #     "Estado": estado
-                    # })
-
-                    # time.sleep(random.randint(8, 20))
-
-              
-
-                st.session_state.envios_completados = True  # ✅ Marcar que se completaron los envíos
+                st.session_state.envios_completados = True  
                 st.session_state.whatsapp_abierto = False
 
                 driver.quit()
@@ -187,9 +127,9 @@ if archivo:
 
                 df_log.to_excel(archivo_log, index=False)
 
+                st.success("El proceso de envío terminó y se guardó un excel en la carpeta 'enviados'. La podés encontrar en el apartado 'Historial' o en la carpeta del proyecto.")
+
                 # with open(archivo_log, "rb") as f:
                 #     st.download_button("⬇️ Descargar registro de envíos", f, file_name=f"{nombre_archivo}.xlsx")
-
-
     else:
         st.error("❌ El Excel no tiene las columnas 'Nombre' o 'Numero'")

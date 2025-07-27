@@ -44,7 +44,7 @@ def normalizar_numero(num: str, CODIGO_PAIS="54") -> str:
     else:
         return f"+{CODIGO_PAIS}{num}"
 
-def enviar_mensajes(driver, nombre, numero, mensaje_cuerpo):
+def enviar_mensajes(driver, nombre, numero, mensaje_cuerpo, index, lista):
     try:
         mensaje = variar_inicio_mensajes(nombre) + " " + mensaje_cuerpo
         mensaje_url = urllib.parse.quote(mensaje)
@@ -56,15 +56,17 @@ def enviar_mensajes(driver, nombre, numero, mensaje_cuerpo):
         try:
             boton = driver.find_element(By.XPATH, '//button[@aria-label="Enviar"]')
             boton.click()
-            estado = "✅ Enviado"
+            estado = True
             st.success(f"{nombre}: Mensaje enviado.")
         except Exception as e:
-            estado = f"❌ Error al hacer clic: {e}"
+            estado = False
             st.error(f"{nombre}: Error al enviar.")
 
-        time.sleep(random.randint(8, 20))
+        if index != (len(lista)-1):
+            time.sleep(random.randint(8, 20))
+
     except Exception as e:
-        estado = f"❌ Error general: {e}"
+        estado = False
         st.error(f"{nombre}: Error al enviar.")
 
     return estado  
