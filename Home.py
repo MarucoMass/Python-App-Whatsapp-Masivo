@@ -105,12 +105,13 @@ if archivo:
                         "Nombre": nombre,
                         "Numero": numero,
                         "Fecha-Último-Envio": datetime.now().strftime("%d/%m/%Y %H:%M"),
-                        "Mensaje-Enviado": mensaje_cuerpo,
+                        "Último-Mensaje-Enviado": mensaje_cuerpo,
                         "Estado":"✅ Enviado" if estado else "❌ No enviado",
                         "Status-Respuesta":"Para revisar" if estado  else "No enviado",
                         "Fecha-Última-Respuesta": "---",
                         # "Reenviado": "No",
-                        "Notas": ""
+                        "Última-Respuesta": ""
+                        # "Notas": ""
                     })
 
                 st.session_state.envios_completados = True  

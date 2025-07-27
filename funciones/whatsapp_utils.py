@@ -67,7 +67,7 @@ def enviar_mensajes(driver, nombre, numero, mensaje_cuerpo, index, lista):
 
     except Exception as e:
         estado = False
-        st.error(f"{nombre}: Error al enviar.")
+        st.error(f"{nombre}: Error al enviar: {e}.")
 
     return estado  
 

@@ -86,32 +86,31 @@ def check_respondio(driver):
     if index_ultimo_out == -1:
         return False, "", ""
 
+    respuestas = []
+    fecha_hora = ""
+
     for mensaje in mensajes[index_ultimo_out + 1:]:
         clases = mensaje.get_attribute("class")
         if "message-in" in clases:
             texto_completo = mensaje.text.strip()
             if texto_completo:
-                fecha_hora = ""
+                respuestas.append(texto_completo)
                 try:
                     elem_fecha = mensaje.find_element(By.CSS_SELECTOR, "div.copyable-text")
-                    fecha_hora = elem_fecha.get_attribute("data-pre-plain-text")
-                    if fecha_hora:
-                        # fecha_hora = fecha_hora.strip("[] ").strip()
-                        match = re.search(r'\[(.*?)\]', fecha_hora)
+                    fecha_raw = elem_fecha.get_attribute("data-pre-plain-text")
+                    if fecha_raw:
+                        match = re.search(r'\[(.*?)\]', fecha_raw)
                         if match:
-                            fecha_hora = formatear_fecha_hora(match.group(1))
+                            fecha_hora = formatear_fecha_hora(match.group(1))  # Actualiza siempre, guarda la última
                 except:
-                    fecha_hora = ""
+                    pass
 
-                lineas = texto_completo.splitlines()
-                if len(lineas) >= 2:
-                    texto = "\n".join(lineas[:-1])
-                else:
-                    texto = texto_completo
+    if respuestas:
+        texto = "\n".join(respuestas)
+        return True, texto, fecha_hora
+    else:
+        return False, "", ""
 
-                return True, texto, fecha_hora
-
-    return False, "", ""
 
 def formatear_fecha_hora(fecha_hora_str):
     try:
@@ -126,8 +125,7 @@ def formatear_fecha_hora(fecha_hora_str):
         print("Error al formatear fecha_hora:", e)
     return fecha_hora_str
 
-
-if boton_revisar:
+def revisar_mensajes():
     st.info("Abriendo WhatsApp Web y chequeando respuestas...")
     driver = iniciar_driver()
     driver.get("https://web.whatsapp.com")
@@ -154,8 +152,7 @@ if boton_revisar:
             st.write(f"{nombre} {'sí respondió' if responded else 'no respondió'}")
             if responded:
                 df.at[i, "Fecha-Última-Respuesta"] = fecha_hora
-                df.to_excel(ruta_archivo, index=False)
-
+                df.at[index, "Última-Respuesta"] = texto
         try:
             df.to_excel(ruta_archivo, index=False)
             st.success(f"Archivo sobrescrito: {archivo_seleccionado}")
@@ -164,16 +161,18 @@ if boton_revisar:
 
     driver.quit()
 
+if boton_revisar:
+    revisar_mensajes()
+
 # --- Reenviar mensajes ---
 
 st.subheader("📝 Redactá un mensaje para los que todavía no respondieron o elige a quienes querés reenvíar un mensaje")
 
 opciones_destinatarios = ["Todos", "Para revisar", "No respondió", "No respondió hace más de 2 días", "Sí respondió", "No enviado"]
 
-st.info("Primero elegí un historial del selector. Después podés enviar mensaje masivamente a quienes elijas.")
 
 destinatarios_seleccionados = st.selectbox(
-    "Elegí a quiénes enviar el mensaje según su estado:",
+    "Primero elegí un historial. Luego seleccioná a quiénes vas enviar el mensaje según su estado:",
     opciones_destinatarios
 )
 
@@ -196,7 +195,7 @@ if destinatarios_seleccionados:
     # st.dataframe(destinatarios_filtrados)
 
 mensaje_base = st.text_area(
-            "✉️ Escribí el mensaje para enviar. El `Hola {nombre}, cómo éstas? (por ejemplo)` se agrega automáticamente.",
+            "✉️ Escribí el mensaje a enviar. El `Hola {nombre}, cómo éstas? (por ejemplo)` se agrega automáticamente.",
             height=200,
             placeholder="En seguimiento de mi mensaje anterior..."
         )
@@ -231,14 +230,26 @@ if st.session_state.whatsapp_abierto:
             nombre = str(row["Nombre"])
             numero = str(row["Numero"])
 
-            estado = enviar_mensajes(driver, nombre, numero, mensaje, index, destinatarios)
+            url = f"https://web.whatsapp.com/send?phone={numero}"
+            driver.get(url)
+            st.write(f"Chequeando respuestas de {nombre}...")
+            time.sleep(10)
 
-            df.at[index, "Estado"] = estado
-            df.at[index, "Mensaje-Enviado"] = mensaje
-            df.at[index, "Fecha-Último-Envio"] = datetime.now().strftime("%d/%m/%Y %H:%M")
+            responded, texto, fecha_hora = check_respondio(driver)
 
-            if df.at[index, "Status-Respuesta"] != "Para revisar":
-                df.at[index, "Status-Respuesta"] = "Para revisar"
+            df.at[index, "Status-Respuesta"] = "Sí respondió" if responded else "No respondió"
+            if responded:
+                st.info(f"{nombre} acaba de responder o lo hizo hace poco. Primero revisá su respuesta en el excel una vez terminen los envíos.")
+                df.at[index, "Fecha-Última-Respuesta"] = fecha_hora
+                df.at[index, "Última-Respuesta"] = texto
+            else:
+                estado = enviar_mensajes(driver, nombre, numero, mensaje, index, destinatarios)
+                df.at[index, "Estado"] = estado
+                df.at[index, "Último-Mensaje-Enviado"] = mensaje
+                df.at[index, "Fecha-Último-Envio"] = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+                if df.at[index, "Status-Respuesta"] != "Para revisar":
+                    df.at[index, "Status-Respuesta"] = "Para revisar"
 
         driver.quit()
 
