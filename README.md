@@ -75,4 +75,4 @@ Al finalizar, podés ver el estado de cada envío y se guarda un excel con los d
 ## ❓¿TENÉS PROBLEMAS?
 
 - Cerrá todo y volvé a ejecutar el archivo `masivo.bat`.
-- Asegurate de tener Google Chrome instalado y como navegador predeterminado.
+- Asegurate de tener Google Chrome instalado.
