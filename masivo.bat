@@ -15,7 +15,7 @@ echo    Iniciando app Streamlit...
 echo -------------------------------
 echo.
 
-.\python\python.exe -m streamlit run .\python\app.py
+.\python\python.exe -m streamlit run .\python\Home.py
 
 echo.
 echo ================================

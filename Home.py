@@ -1,15 +1,8 @@
 from datetime import datetime
 import streamlit as st
 import pandas as pd
-import random
-import time
-import urllib.parse
 import os
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from funciones.whatsapp_utils import enviar_mensajes, normalizar_numero, variar_inicio_mensajes, iniciar_driver
 
 
@@ -71,8 +64,8 @@ if archivo:
                 driver = iniciar_driver()
                 st.session_state.driver = driver
                 st.session_state.contactos = contactos
-                st.session_state.mensaje_cuerpo = mensaje_base
-                st.session_state.nombre_lista = nombre_lista
+                # st.session_state.mensaje_cuerpo = mensaje_base
+                # st.session_state.nombre_lista = nombre_lista
                 st.session_state.whatsapp_abierto = True
                 st.success("WhatsApp Web abierto. Escaneá el QR si es la primera vez.")
         else:
@@ -89,6 +82,8 @@ if archivo:
 
         # Botón para enviar mensajes
         if "driver" in st.session_state and st.session_state.whatsapp_abierto and not st.session_state.get("envios_completados", False):
+            st.session_state.mensaje_cuerpo = mensaje_base
+            st.session_state.nombre_lista = nombre_lista
             if st.button("📤 Enviar los mensajes"):
                 driver = st.session_state.driver
                 contactos = st.session_state.contactos
