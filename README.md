@@ -66,9 +66,9 @@ Los mensajes se envían uno por uno y la app te muestra el progreso en tiempo re
 
 ---
 
-### 5. 📥 Descargás el resultado
+### 5. 📥 Historial del resultado y reenvíos
 
-Al finalizar, podés ver el estado de cada envío y descargar un archivo `.csv` con el resumen.
+Al finalizar, podés ver el estado de cada envío y se guarda un excel con los datos de los destinatarios, status, mensaje enviado, respuesta, etc, para que puedas consultarlo en el apartado de `Historial`, y también para que puedas hacer reenvío de mensajes desde el apartado de `Reenvíos`. En ambas páginas se pueden filtrar a los contactos por su status de mensaje ("Para revisar", "No respondió", "No respondió hace más de 2 días", "Si respondió", "No enviado")
 
 ---
 
