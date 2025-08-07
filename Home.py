@@ -125,7 +125,5 @@ if archivo:
 
                 st.success("El proceso de envío terminó y se guardó un excel en la carpeta 'enviados'. La podés encontrar en el apartado 'Historial' o en la carpeta del proyecto.")
 
-                # with open(archivo_log, "rb") as f:
-                #     st.download_button("⬇️ Descargar registro de envíos", f, file_name=f"{nombre_archivo}.xlsx")
     else:
         st.error("❌ El Excel no tiene las columnas 'Nombre' o 'Numero'")

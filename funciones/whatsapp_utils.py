@@ -62,8 +62,10 @@ def enviar_mensajes(driver, nombre, numero, mensaje_cuerpo, index, lista):
             estado = False
             st.error(f"{nombre}: Error al enviar.")
 
-        if index != (len(lista)-1):
-            st.info(f"Pasando a siguiente envío. Queda/n {(len(lista))-(index+1)} envío/s")
+        quedan = len(lista) - (index + 1)
+
+        if quedan >= 2:
+            st.info(f"Mensaje enviado. Quedan {quedan} contactos por enviar.")
             time.sleep(random.randint(8, 20))
 
     except Exception as e:
