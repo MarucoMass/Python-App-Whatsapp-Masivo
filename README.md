@@ -1,15 +1,3 @@
-## Licencia y uso
-
-Este software es propiedad de Mario Massonnat.
-
-Está prohibido:
-- El uso comercial sin autorización del autor.
-- La redistribución del código.
-- La modificación del software.
-- La venta o sublicenciamiento del software.
-
-Para solicitar una licencia comercial, contactar al autor.
-
 # Python-App-Whatsapp-Masivo
 
 # 🟢 INSTRUCCIONES DE INSTALACIÓN
