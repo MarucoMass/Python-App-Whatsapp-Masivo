@@ -84,6 +84,13 @@ Al finalizar, podés ver el estado de cada envío y se guarda un excel con los d
 
 ---
 
+### 6. ✨ Vistas de la herramienta
+
+<img width="1907" height="947" alt="1754592358909" src="https://github.com/user-attachments/assets/d948678f-6f23-484a-b997-8f18a9b05e41" />
+<img width="1903" height="931" alt="1754592358877" src="https://github.com/user-attachments/assets/8d7bd3ea-f8eb-4314-beb7-889a7aca705f" />
+<img width="1905" height="948" alt="1754592359035" src="https://github.com/user-attachments/assets/3f3bc723-4140-4c02-be59-d77d8089ae61" />
+
+
 ## ❓¿TENÉS PROBLEMAS?
 
 - Cerrá todo y volvé a ejecutar el archivo `masivo.bat`.
